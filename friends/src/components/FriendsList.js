@@ -17,5 +17,5 @@ export default function (props){
 }
 
 const FriendsList = styled.div`
-    
+    padding-right: 20px;
 `

@@ -7,7 +7,16 @@ export default function (props){
         <FriendCard>
             <h2>{friend.name}</h2>
             <p><strong>Age:</strong> {friend.age}</p>
-            <p><strong>Email:</strong> {friend.email}</p>
+            <p><strong>Email:</strong><br />{friend.email}</p>
+
+            <button
+                onClick={event => event.preventDefault()}
+            
+            >Delete</button>
+            <button
+                onClick={event => event.preventDefault()}
+            
+            >Update</button>
         </FriendCard>
     )
 }

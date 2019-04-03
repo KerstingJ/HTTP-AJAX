@@ -18,14 +18,14 @@ class App extends Component {
     console.log("Component did mount")
     axios.get("http://localhost:5000/friends/")
       .then(res => this.setState({friends: res.data}))
-      .catch(err => console.log("well shit"))
+      .catch(() => console.log("well shit"))
   }
 
   render() {
     return (
       <AppContainer>
-        <FriendsList {...this.state}/>
-        <FriendsForm />
+        <FriendsList friends={this.state.friends} />
+        <div className="right"><FriendsForm setAppState={this.setState.bind(this)}/></div>
       </AppContainer>
     );
   }
@@ -36,6 +36,18 @@ const AppContainer = styled.div`
   width: 90%;
 
   display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  @media (max-width: 675) {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .right {
+    display: flex;
+    justify-content: center;
+  }
 `
 
 export default App;
