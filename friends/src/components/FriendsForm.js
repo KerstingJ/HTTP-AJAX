@@ -76,11 +76,11 @@ const FriendForm = styled.form`
     justify-content: flex-start;
     align-items: flex-start;
 
-    margin: 35px;
+    margin: 1rem;
 
     border: 1px solid lightgray;
     border-radius: 5px;
-    padding: 2rem;
+    padding: 43px 32px;
 
     input {
         margin-bottom: 2rem;
