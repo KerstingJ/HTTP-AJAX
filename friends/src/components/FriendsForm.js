@@ -10,6 +10,7 @@ export default function(props) {
     const [friend, setFriend] = useState(
         props.friend ? props.friend : {name: "", age: "", email: ""}
     )
+    const [error, setError] = useState("")
 
     const [submitted, setSubmitted] = useState(false);
 
@@ -19,6 +20,32 @@ export default function(props) {
             props.history.push("/")
         }
     })
+
+    const validateInput = valFriend => {
+        const { name, age, email} = valFriend
+
+        if (!name.trim()){
+            setError("name is required")
+            return null
+        }
+
+        if(name.match(/[\W_0-9]/)){
+            setError("That's not a real name")
+            return null
+        }
+
+        if (age > 120 || age < 5) {
+            setError("That cant be a real age?!")
+            return null
+        }
+
+        if(!email.match(/^[\w_.]+[@][a-zA-Z]+[.]+[a-zA-Z]+$/)){
+            setError("Needs a valid Email")
+            return null
+        }
+
+        return {...valFriend};
+    }
     
     const inputHandler = event => {
         event.preventDefault();
@@ -31,16 +58,25 @@ export default function(props) {
     const addFriend = event => {
         event.preventDefault();
 
+        if (!validateInput(friend)){
+            return;
+        }
+
         Axios.post(baseURL + "friends" , friend)
             .then((res) => {
                 props.setAppState(res.data)
-                setFriend({name: "", age: "", email: ""})
+                setFriend({name: "", age: "", email: ""});
+                setError("");
             })
             .catch((err) => console.log("Oh Shit ", err))
     }
 
     const updateFriend = event => {
         event.preventDefault();
+
+        if (!validateInput(friend)){
+            return;
+        }
 
         Axios.put(`${baseURL}friends/${friend.id}`, friend)
             .then((res) => {
@@ -53,6 +89,7 @@ export default function(props) {
 
     return (
         <FriendForm>
+            <Error>{error}</Error>
             <input 
                 type="text"
                 name="name"
@@ -61,14 +98,14 @@ export default function(props) {
                 onChange={inputHandler}
             ></input>
             <input 
-                type="text"
+                type="number"
                 name="age"
                 placeholder="age"
                 value={friend.age}
                 onChange={inputHandler}
             ></input>
             <input 
-                type="text"
+                type="email"
                 name="email"
                 placeholder="email"
                 value={friend.email}
@@ -85,6 +122,11 @@ export default function(props) {
         </FriendForm>
     )
 }
+
+const Error = styled.div`
+    text-align: center;
+    color: red;
+`
 
 const FriendForm = styled.form`
 
