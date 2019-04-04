@@ -3,16 +3,17 @@ import React from 'react'
 import styled from 'styled-components';
 import Axios from 'axios';
 
+
 const baseURL = "http://localhost:5000/"
 
 export default class FForm extends React.Component {
     constructor(props){
         super(props)
-        this.state = {
-            name: "",
-            age: "",
-            email: ""
-        }
+        let friend = props.friend 
+            ? props.friend
+            : {name: "", age: "", email: ""};
+
+        this.state = {...friend};
     }
     
     inputHandler = event => {
@@ -22,7 +23,7 @@ export default class FForm extends React.Component {
         })
     }
 
-    handleSubmit = event => {
+    addFriend = event => {
         event.preventDefault();
 
         let friend = this.state;
@@ -36,9 +37,27 @@ export default class FForm extends React.Component {
             .catch((err) => console.log("Oh Shit ", err))
     }
 
+    updateFriend = event => {
+        event.preventDefault();
+
+        let friend = this.state;
+
+        Axios.put(`${baseURL}friends/${friend.id}`, friend)
+            .then((res) => {
+                this.props.setAppState({friends: res.data})
+                this.setState(
+                    {name: "", age: "", email: ""},
+                () => this.props.history.push("/")
+                )
+            })
+            .catch((err) => console.log("Oh Shit ", err))
+    }
+
     render() {
+
         return (
             <FriendForm>
+                {console.log(this.props.test)}
                 <input 
                     type="text"
                     name="name"
@@ -62,7 +81,11 @@ export default class FForm extends React.Component {
                 ></input>
                 <button 
                     type="submit"
-                    onClick={this.handleSubmit}
+                    onClick={
+                        this.props.update
+                        ? this.updateFriend
+                        : this.addFriend
+                    }
                 >Add Friend</button>
             </FriendForm>
         )

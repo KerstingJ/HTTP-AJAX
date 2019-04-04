@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import './App.css';
 
 import FriendsForm from './components/FriendsForm.js'
 import FriendsList from './components/FriendsList.js'
+
+import UpdateFriend from './views/UpdateFriend.js'
 
 const baseURL = "http://localhost:5000/"
 
@@ -60,7 +62,20 @@ class App extends Component {
         )}
       />
 
-      <Route path="/update/:id" render={() => <h1>This is my update Form</h1>} />
+      <Route 
+        path="/update/:id"
+        render={(props) => (
+          this.state.friends.length <= 0 ? (
+            <Redirect to="/" />
+          ) : (
+          <UpdateFriend 
+            {...props}
+            friends={this.state.friends}
+            setAppState={this.setState.bind(this)}
+          /> 
+          )
+        )}
+      />
     </>)
   }
 }
