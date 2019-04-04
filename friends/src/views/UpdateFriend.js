@@ -3,25 +3,31 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 
 import FriendsForm from '../components/FriendsForm.js'
+const FriendsFormWithRouter = withRouter(FriendsForm);
 
-export default class UpdateFriend extends React.Component {
-    render(){
-        let friend = this.props.friends.find(friend => {
-            return friend.id === this.props.match.params.id - 0
-        })
+export default function(props){
 
-        return (
-            <StyledFriendsFormWithRouter 
+    const goHome = () => {
+
+    }
+
+    let friend = props.friends.find(friend => {
+        return friend.id === props.match.params.id - 0
+    })
+
+    return (
+        <FriendView>
+            <FriendsFormWithRouter
                 update
                 friend={friend}
-                setAppState={this.props.setAppState}
+                setAppState={props.setAppState}
             />
-        )
-    }
+        </FriendView>
+    )
 }
 
-const StyledFriendsForm = styled(FriendsForm)`
-    display: inline-block;
+const FriendView = styled.div`
+    display: flex;
+    justify-content: center;
 
 `
-const StyledFriendsFormWithRouter = withRouter(StyledFriendsForm);

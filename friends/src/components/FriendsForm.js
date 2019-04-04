@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect }from 'react'
 
 import styled from 'styled-components';
 import Axios from 'axios';
@@ -6,94 +6,89 @@ import Axios from 'axios';
 
 const baseURL = "http://localhost:5000/"
 
-export default class FForm extends React.Component {
-    constructor(props){
-        super(props)
-        let friend = props.friend 
-            ? props.friend
-            : {name: "", age: "", email: ""};
+export default function(props) {
+    const [friend, setFriend] = useState(
+        props.friend ? props.friend : {name: "", age: "", email: ""}
+    )
 
-        this.state = {...friend};
-    }
+    const [submitted, setSubmitted] = useState(false);
+
+    useEffect(() => {
+        if (submitted) {
+            setSubmitted(!submitted)
+            props.history.push("/")
+        }
+    })
     
-    inputHandler = event => {
+    const inputHandler = event => {
         event.preventDefault();
-        this.setState({
-            [event.target.name]: event.target.value
-        })
+
+        let friendCopy = {...friend}
+        friendCopy[event.target.name] = event.target.value
+        setFriend(friendCopy)
     }
 
-    addFriend = event => {
+    const addFriend = event => {
         event.preventDefault();
-
-        let friend = this.state;
 
         Axios.post(baseURL + "friends" , friend)
             .then((res) => {
-
-                this.props.setAppState( res.data)
-                this.setState({name: "", age: "", email: ""})
+                props.setAppState(res.data)
+                setFriend({name: "", age: "", email: ""})
             })
             .catch((err) => console.log("Oh Shit ", err))
     }
 
-    updateFriend = event => {
+    const updateFriend = event => {
         event.preventDefault();
-
-        let friend = this.state;
 
         Axios.put(`${baseURL}friends/${friend.id}`, friend)
             .then((res) => {
-                this.props.setAppState(res.data)
-                this.setState(
-                    {name: "", age: "", email: ""},
-                () => this.props.history.push("/")
-                )
+                props.setAppState(res.data)
+                setFriend({name: "", age: "", email: ""})
+                setSubmitted(!submitted)
             })
             .catch((err) => console.log("Oh Shit ", err))
     }
 
-    render() {
-
-        return (
-            <FriendForm>
-                <input 
-                    type="text"
-                    name="name"
-                    placeholder="name"
-                    value={this.state.name}
-                    onChange={this.inputHandler}
-                ></input>
-                <input 
-                    type="text"
-                    name="age"
-                    placeholder="age"
-                    value={this.state.age}
-                    onChange={this.inputHandler}
-                ></input>
-                <input 
-                    type="text"
-                    name="email"
-                    placeholder="email"
-                    value={this.state.email}
-                    onChange={this.inputHandler}
-                ></input>
-                <button 
-                    type="submit"
-                    onClick={
-                        this.props.update
-                        ? this.updateFriend
-                        : this.addFriend
-                    }
-                >Add Friend</button>
-            </FriendForm>
-        )
-    }
+    return (
+        <FriendForm>
+            <input 
+                type="text"
+                name="name"
+                placeholder="name"
+                value={friend.name}
+                onChange={inputHandler}
+            ></input>
+            <input 
+                type="text"
+                name="age"
+                placeholder="age"
+                value={friend.age}
+                onChange={inputHandler}
+            ></input>
+            <input 
+                type="text"
+                name="email"
+                placeholder="email"
+                value={friend.email}
+                onChange={inputHandler}
+            ></input>
+            <button 
+                type="submit"
+                onClick={
+                    props.update
+                    ? updateFriend
+                    : addFriend
+                }
+            >{props.update ? "Update" : "Add"} Friend</button>
+        </FriendForm>
+    )
 }
 
 const FriendForm = styled.form`
 
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
