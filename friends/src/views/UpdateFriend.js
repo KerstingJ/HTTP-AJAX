@@ -7,8 +7,9 @@ const FriendsFormWithRouter = withRouter(FriendsForm);
 
 export default function(props){
 
-    const goHome = () => {
-
+    const goHome = event => {
+        event.preventDefault();
+        props.history.push("/")
     }
 
     let friend = props.friends.find(friend => {
@@ -22,12 +23,25 @@ export default function(props){
                 friend={friend}
                 setAppState={props.setAppState}
             />
+            <button className="backButton" onClick={goHome}>Back</button>
         </FriendView>
     )
 }
 
 const FriendView = styled.div`
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    .backButton {
+        background: none;
+        border: none;
+        transition: .2s;
+
+        :hover {
+            text-decoration: underline;
+        }
+    }
 
 `

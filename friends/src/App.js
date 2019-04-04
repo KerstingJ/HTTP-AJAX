@@ -30,7 +30,6 @@ function App(props) {
     event.preventDefault();
     event.stopPropagation();
 
-    // console.log(`${baseURL}friends/${id}`)
     axios.delete(`${baseURL}friends/${id}`)
       .then(res => setFriends(res.data))
       .catch(err => console.log("oh dang"))
