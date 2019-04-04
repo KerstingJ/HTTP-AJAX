@@ -31,7 +31,7 @@ export default class FForm extends React.Component {
         Axios.post(baseURL + "friends" , friend)
             .then((res) => {
 
-                this.props.setAppState({friends: res.data})
+                this.props.setAppState( res.data)
                 this.setState({name: "", age: "", email: ""})
             })
             .catch((err) => console.log("Oh Shit ", err))
@@ -44,7 +44,7 @@ export default class FForm extends React.Component {
 
         Axios.put(`${baseURL}friends/${friend.id}`, friend)
             .then((res) => {
-                this.props.setAppState({friends: res.data})
+                this.props.setAppState(res.data)
                 this.setState(
                     {name: "", age: "", email: ""},
                 () => this.props.history.push("/")
@@ -57,7 +57,6 @@ export default class FForm extends React.Component {
 
         return (
             <FriendForm>
-                {console.log(this.props.test)}
                 <input 
                     type="text"
                     name="name"

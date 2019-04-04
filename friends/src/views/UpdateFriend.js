@@ -1,9 +1,8 @@
 import React from 'react';
+import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 
 import FriendsForm from '../components/FriendsForm.js'
-
-const FriendsFormWithRouter = withRouter(FriendsForm);
 
 export default class UpdateFriend extends React.Component {
     render(){
@@ -12,7 +11,7 @@ export default class UpdateFriend extends React.Component {
         })
 
         return (
-            <FriendsFormWithRouter 
+            <StyledFriendsFormWithRouter 
                 update
                 friend={friend}
                 setAppState={this.props.setAppState}
@@ -20,3 +19,9 @@ export default class UpdateFriend extends React.Component {
         )
     }
 }
+
+const StyledFriendsForm = styled(FriendsForm)`
+    display: inline-block;
+
+`
+const StyledFriendsFormWithRouter = withRouter(StyledFriendsForm);

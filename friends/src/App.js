@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Route, Redirect } from 'react-router-dom';
@@ -11,52 +11,43 @@ import UpdateFriend from './views/UpdateFriend.js'
 
 const baseURL = "http://localhost:5000/"
 
-class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      friends: [],
+function App(props) {
+
+  const [friends, setFriends] = useState([]);
+  const [mounted, setMounted] = useState(false);
+ 
+  useEffect(() => {
+    if (!mounted) {
+      console.log("Component did mount... kinda")
+      axios.get("http://localhost:5000/friends/")
+        .then(res => setFriends(res.data))
+        .catch(() => console.log("well shit"))
+      setMounted(true);
     }
-  }
+  })
 
-  componentDidMount(){
-    console.log("Component did mount")
-    axios.get("http://localhost:5000/friends/")
-      .then(res => this.setState({friends: res.data}))
-      .catch(() => console.log("well shit"))
-  }
-
-  deleteFriend = (event, id) => {
+  const deleteFriend = (event, id) => {
     event.preventDefault();
     event.stopPropagation();
 
     // console.log(`${baseURL}friends/${id}`)
     axios.delete(`${baseURL}friends/${id}`)
-      .then(res => this.setState({friends: res.data}))
+      .then(res => setFriends(res.data))
       .catch(err => console.log("oh dang"))
 
   }
 
-  updateFriend = (event, id) => {
-    event.preventDefault();
-
-    // console.log(`${baseURL}friends/${id}`)
-    axios.delete(`${baseURL}friends/${id}`)
-      .then(res => this.setState({friends: res.data}))
-      .catch(err => console.log("oh dang"))
-  }
-
-  render() {
-    return (<>
+  return (
+    <>
 
       <Route 
         exact path="/"
         render={() => (
           <AppContainer>
-            <FriendsForm setAppState={this.setState.bind(this)}/>
+            <FriendsForm setAppState={setFriends}/>
             <FriendsList 
-              friends={this.state.friends}
-              deleteFriend={this.deleteFriend}
+              friends={friends}
+              deleteFriend={deleteFriend}
             />
           </AppContainer>
         )}
@@ -65,19 +56,20 @@ class App extends Component {
       <Route 
         path="/update/:id"
         render={(props) => (
-          this.state.friends.length <= 0 ? (
+          friends.length <= 0 ? (
             <Redirect to="/" />
           ) : (
           <UpdateFriend 
             {...props}
-            friends={this.state.friends}
-            setAppState={this.setState.bind(this)}
+            friends={friends}
+            setAppState={setFriends}
           /> 
           )
         )}
       />
-    </>)
-  }
+
+    </>
+  )
 }
 
 const AppContainer = styled.div`

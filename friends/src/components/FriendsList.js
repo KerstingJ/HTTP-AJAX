@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 
 import FriendCard from './FriendCard';
@@ -22,10 +21,3 @@ export default function (props){
         </>
     )
 }
-
-const FriendsList = styled.div`
-    padding-right: 20px;
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-`
