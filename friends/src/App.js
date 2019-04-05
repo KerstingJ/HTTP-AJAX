@@ -14,17 +14,14 @@ const baseURL = "http://localhost:5000/"
 function App(props) {
 
   const [friends, setFriends] = useState([]);
-  const [mounted, setMounted] = useState(false);
  
   useEffect(() => {
-    if (!mounted) {
       console.log("Component did mount... kinda")
       axios.get("http://localhost:5000/friends/")
         .then(res => setFriends(res.data))
         .catch(() => console.log("well shit"))
       setMounted(true);
-    }
-  })
+  }, [])
 
   const deleteFriend = (event, id) => {
     event.preventDefault();
