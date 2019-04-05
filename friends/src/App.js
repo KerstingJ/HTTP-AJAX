@@ -20,7 +20,6 @@ function App(props) {
       axios.get("http://localhost:5000/friends/")
         .then(res => setFriends(res.data))
         .catch(() => console.log("well shit"))
-      setMounted(true);
   }, [])
 
   const deleteFriend = (event, id) => {
